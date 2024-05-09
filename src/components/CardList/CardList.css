@@ -1,0 +1,9 @@
+.list__item {
+    margin-block-start: 20px;
+    margin-block-end: 0 !important;
+    padding: 0 !important;
+}
+.list__pagination {
+    margin: 20px 0 18px;
+    text-align: center;
+}

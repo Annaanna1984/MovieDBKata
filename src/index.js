@@ -1,17 +1,35 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import './index.css';
-import App from './App';
-import reportWebVitals from './reportWebVitals';
+import App from './components/App/App';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
-root.render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>
-);
+root.render(<App className="app" />);
 
-// If you want to start measuring performance in your app, pass a function
-// to log results (for example: reportWebVitals(console.log))
-// or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
-reportWebVitals();
+// const options = {
+//     method: 'GET',
+//     headers: {
+//         accept: 'application/json',
+//         Authorization: 'Basic 1588da012771dbcaca018a98a3b39bfe'
+//     }
+// };
+
+// fetch('https://api.themoviedb.org/3/search/movie?query=Shrek&include_adult=false&language=en-US&page=1', options)
+//     .then(response => response.json())
+//     .then(body => console.log(body))
+//     .catch(err => console.error(err));
+
+// const getResource = async (url, options) => {
+//     const res = await fetch(url, options)
+//     if(!res.ok){
+//         throw new Error(`could not fetch ${url}, received ${res.status}`)
+//     }
+//     const body = await res.json()
+//     return body
+// }
+// getResource('https://api.themoviedb.org/3/search/movie?query=Shrek&include_adult=false&language=en-US&page=1',options)
+//     .then((body)=>{
+//         console.log(body)
+//     })
+//     .catch((err)=>{
+//         console.error(err)
+//     })
