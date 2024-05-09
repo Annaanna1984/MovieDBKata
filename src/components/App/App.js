@@ -94,7 +94,8 @@ export default class App extends React.Component {
                 const movieList = this.state.ratedMovieList;
                 movieList.push(movie);
                 this.setState({
-                    ratedMovieList: movieList
+                    ratedMovieList: movieList,
+                    ratedTotalResults: this.state.ratedTotalResults + 1
                 });
             }
         });
@@ -207,7 +208,7 @@ export default class App extends React.Component {
                     <Online>
                         <Layout className="app__layout">
                             <Content className="app__content">
-                                <Tabs ClassName="tabs" items={tabItems} />
+                                <Tabs items={tabItems} />
                             </Content>
                         </Layout>
                     </Online>

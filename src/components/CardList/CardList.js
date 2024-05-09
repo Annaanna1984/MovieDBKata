@@ -10,7 +10,8 @@ export default class CardList extends React.Component {
 
     render() {
         const { movieList, loading, totalResults, getMovieList, getRatedMovieList } = this.props;
-        const listItems = movieList.map((film, idx) => {
+        const limitedList = movieList.length <= 20 ? movieList : movieList.slice(0, 20);
+        const listItems = limitedList.map((film, idx) => {
             return (
                 <Col key={idx} xs={36} sm={36} md={12} lg={12} xl={12}>
                     <List.Item className="list__item">
@@ -26,7 +27,7 @@ export default class CardList extends React.Component {
 
         return (
             <React.Fragment>
-                {!movieList.length && !loading && (this.props.rated || this.props.searchInput) ? (
+                {!limitedList.length && !loading && (this.props.rated || this.props.searchInput) ? (
                     <MyAlert message={'Nothing found.'} />
                 ) : (
                     <List

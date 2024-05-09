@@ -86,7 +86,7 @@ CardItem.propTypes = {
         release_date: PropTypes.string,
         poster_path: PropTypes.string,
         vote_average: PropTypes.number,
-        genre_ids: PropTypes.number
+        genre_ids: PropTypes.array
     }),
     removeRatingMovie: PropTypes.func,
     setRatingMovie: PropTypes.func
@@ -99,7 +99,7 @@ CardItem.defaultProps = {
         release_date: '',
         poster_path: '',
         vote_average: 0,
-        genre_ids: 0
+        genre_ids: []
     },
     removeRatingMovie: () => {},
     setRatingMovie: () => {}
