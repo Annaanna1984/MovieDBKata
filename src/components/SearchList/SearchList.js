@@ -23,7 +23,7 @@ export default class SearchList extends React.Component {
 
     render() {
         return (
-            <React.Fragment>
+            <>
                 <Input
                     allowClear
                     size="large"
@@ -42,7 +42,7 @@ export default class SearchList extends React.Component {
                     setRatingMovie={this.props.setRatingMovie}
                     removeRatingMovie={this.props.removeRatingMovie}
                 />
-            </React.Fragment>
+            </>
         );
     }
 }

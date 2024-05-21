@@ -5,8 +5,8 @@ import { Layout, Tabs } from 'antd';
 import { Content } from 'antd/es/layout/layout';
 import MySpin from '../Spin';
 import MyAlert from '../Alert';
-import { Offline, Online } from 'react-detect-offline';
-import { GenreProvider } from '../GenreContext';
+import { Offline } from 'react-detect-offline';
+import { GenreProvider } from '../../GenreContext';
 import SearchList from '../SearchList';
 import CardList from '../CardList';
 
@@ -82,13 +82,13 @@ export default class App extends React.Component {
     setRatingMovie = (movie, rating) => {
         this.service.setRating(this.state.sessionId, movie.id, rating).then(() => {
             if (this.state.ratedMovieList.find((i) => i.id === movie.id)) {
-                this.setState({
-                    ratedMovieList: this.state.ratedMovieList.map((el) => {
+                this.setState((ratedMovieList) => {
+                    ratedMovieList.map((el) => {
                         if (el.id === movie.id) {
                             el.rating = rating;
                         }
                         return el;
-                    })
+                    });
                 });
             } else {
                 const movieList = this.state.ratedMovieList;
@@ -168,7 +168,7 @@ export default class App extends React.Component {
                 label: 'Search',
                 key: '1',
                 children: (
-                    <React.Fragment>
+                    <>
                         {error && errorMessage}
                         {loading && spinner}
                         <SearchList
@@ -180,14 +180,14 @@ export default class App extends React.Component {
                             setRatingMovie={this.setRatingMovie}
                             removeRatingMovie={this.removeRatingMovie}
                         />
-                    </React.Fragment>
+                    </>
                 )
             },
             {
                 label: 'Rated',
                 key: '2',
                 children: (
-                    <React.Fragment>
+                    <>
                         {ratedLoading && spinner}
                         <CardList
                             movieList={this.state.ratedMovieList}
@@ -198,25 +198,23 @@ export default class App extends React.Component {
                             removeRatingMovie={this.removeRatingMovie}
                             rated={true}
                         />
-                    </React.Fragment>
+                    </>
                 )
             }
         ];
         return (
-            <React.Fragment>
+            <>
                 <GenreProvider value={this.state.genres}>
-                    <Online>
-                        <Layout className="app__layout">
-                            <Content className="app__content">
-                                <Tabs items={tabItems} />
-                            </Content>
-                        </Layout>
-                    </Online>
                     <Offline>
                         <MyAlert message={'No internet connection.'} />
                     </Offline>
+                    <Layout className="app__layout">
+                        <Content className="app__content">
+                            <Tabs items={tabItems} />
+                        </Content>
+                    </Layout>
                 </GenreProvider>
-            </React.Fragment>
+            </>
         );
     }
 }

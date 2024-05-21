@@ -1,5 +1,4 @@
-const _apiBase = 'https://api.themoviedb.org/3/';
-const _guestSessionURL = 'authentication/guest_session/new';
+import { _apiBase } from '../constants/constants';
 
 export default class MDBService {
     options = {
@@ -32,10 +31,12 @@ export default class MDBService {
     };
 
     getMoviesByName = async (filmName, page) => {
-        const res = await fetch(
-            `${_apiBase}search/movie?query=${filmName}&include_adult=false&language=en-US&page=${page}`,
-            this.options
-        );
+        const url = new URL('search/movie', _apiBase);
+        url.searchParams.set('query', filmName);
+        url.searchParams.set('include_adult', 'false');
+        url.searchParams.set('language', 'en-US');
+        url.searchParams.set('page', page);
+        const res = await fetch(url, this.options);
         if (!res.ok) {
             throw new Error(`could not fetch ${filmName}, received ${res.status}`);
         }
@@ -43,7 +44,8 @@ export default class MDBService {
     };
 
     getGuestSessionId = async () => {
-        const res = await fetch(`${_apiBase}${_guestSessionURL}`, this.options);
+        const url = new URL('authentication/guest_session/new', _apiBase);
+        const res = await fetch(url, this.options);
         if (!res.ok) {
             throw new Error(`could not create guest session, received ${res.status}`);
         }
@@ -51,37 +53,44 @@ export default class MDBService {
     };
 
     getRatedMovies = async (guestSessionId, page) => {
-        const res = await fetch(
-            `${_apiBase}guest_session/${guestSessionId}/rated/movies?query=language=en-US&page=${page}`,
-            this.options
-        );
+        const url = new URL(`guest_session/${guestSessionId}/rated/movies`, _apiBase);
+        url.searchParams.set('query', 'language=en-US');
+        url.searchParams.set('page', page);
+        const res = await fetch(url, this.options);
         if (!res.ok) {
             throw new Error(`could not fetch rated movies, received ${res.status}`);
         }
         return await res.json();
     };
 
-    setRating = async (guestSessionId, movie_id, rating) => {
+    setRating = async (guestSessionId, movieId, rating) => {
         const postOptions = this.postOptions;
         postOptions['body'] = `{"value":${rating}}`;
-
-        const res = await fetch(
-            `${_apiBase}movie/${movie_id}/rating?guest_session_id=${guestSessionId}`,
-            this.postOptions
-        );
+        const url = new URL(`movie/${movieId}/rating`, _apiBase);
+        url.searchParams.set('guest_session_id', guestSessionId);
+        const res = await fetch(url, this.postOptions);
+        if (!res.ok) {
+            throw new Error(`could not set rating for movie ${movieId}, received ${res.status}`);
+        }
         return await res.json();
     };
 
-    deleteRating = async (guestSessionId, movie_id) => {
-        const res = await fetch(
-            `${_apiBase}movie/${movie_id}/rating?guest_session_id=${guestSessionId}`,
-            this.deleteOptions
-        );
+    deleteRating = async (guestSessionId, movieId) => {
+        const url = new URL(`movie/${movieId}/rating`, _apiBase);
+        url.searchParams.set('guest_session_id', guestSessionId);
+        const res = await fetch(url, this.deleteOptions);
+        if (!res.ok) {
+            throw new Error(`could not delete rating for movie ${movieId}, received ${res.status}`);
+        }
         return await res.json();
     };
 
-    getGenres = async function () {
-        const res = await fetch(`${_apiBase}genre/movie/list`, this.options);
+    getGenres = async () => {
+        const url = new URL('genre/movie/list', _apiBase);
+        const res = await fetch(url, this.options);
+        if (!res.ok) {
+            throw new Error(`could not get genres, received ${res.status}`);
+        }
         return await res.json();
     };
 }
