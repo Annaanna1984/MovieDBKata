@@ -7,14 +7,13 @@ import PropTypes from 'prop-types';
 
 export default class CardList extends React.Component {
     page = 1;
-    idx = 0;
 
     render() {
         const { movieList, loading, totalResults, getMovieList, getRatedMovieList } = this.props;
         const limitedList = movieList.length <= 20 ? movieList : movieList.slice(0, 20);
         const listItems = limitedList.map((film) => {
             return (
-                <Col key={this.idx++} xs={36} sm={36} md={12} lg={12} xl={12}>
+                <Col key={film.id} xs={36} sm={36} md={12} lg={12} xl={12}>
                     <List.Item className="list__item">
                         <CardItem
                             film={film}

@@ -27,11 +27,18 @@ export default class App extends React.Component {
     service = new MDBService();
 
     getGenreMovies = () => {
-        this.service.getGenres().then((res) => {
-            this.setState({
-                genres: res.genres
+        this.service
+            .getGenres()
+            .then((res) => {
+                this.setState({
+                    genres: res.genres
+                });
+            })
+            .catch(() => {
+                this.setState({
+                    error: true
+                });
             });
-        });
     };
 
     createGuestSession = () => {
@@ -47,16 +54,23 @@ export default class App extends React.Component {
                 );
             }
         } else {
-            this.service.getGuestSessionId().then((res) => {
-                const obj = { session: res.guest_session_id, date: Date.now() };
-                localStorage.setItem('session', JSON.stringify(obj));
-                this.setState(
-                    {
-                        sessionId: res.guest_session_id
-                    },
-                    () => this.getRatedMovieList()
-                );
-            });
+            this.service
+                .getGuestSessionId()
+                .then((res) => {
+                    const obj = { session: res.guest_session_id, date: Date.now() };
+                    localStorage.setItem('session', JSON.stringify(obj));
+                    this.setState(
+                        {
+                            sessionId: res.guest_session_id
+                        },
+                        () => this.getRatedMovieList()
+                    );
+                })
+                .catch(() => {
+                    this.setState({
+                        error: true
+                    });
+                });
         }
     };
 
@@ -80,37 +94,53 @@ export default class App extends React.Component {
     };
 
     setRatingMovie = (movie, rating) => {
-        this.service.setRating(this.state.sessionId, movie.id, rating).then(() => {
-            if (this.state.ratedMovieList.find((i) => i.id === movie.id)) {
-                this.setState((ratedMovieList) => {
-                    ratedMovieList.map((el) => {
-                        if (el.id === movie.id) {
-                            el.rating = rating;
-                        }
-                        return el;
+        this.service
+            .setRating(this.state.sessionId, movie.id, rating)
+            .then(() => {
+                if (this.state.ratedMovieList.find((i) => i.id === movie.id)) {
+                    this.setState((ratedMovieList) => {
+                        ratedMovieList.map((el) => {
+                            if (el.id === movie.id) {
+                                el.rating = rating;
+                            }
+                            return el;
+                        });
                     });
-                });
-            } else {
-                const movieList = this.state.ratedMovieList;
-                movieList.push(movie);
+                } else {
+                    this.setState((prevState) => {
+                        const list = prevState.ratedMovieList;
+                        list.push(movie);
+                        return {
+                            ratedMovieList: list,
+                            ratedTotalResults: prevState.ratedTotalResults + 1
+                        };
+                    });
+                }
+            })
+            .catch(() => {
                 this.setState({
-                    ratedMovieList: movieList,
-                    ratedTotalResults: this.state.ratedTotalResults + 1
+                    error: true
                 });
-            }
-        });
+            });
     };
 
     removeRatingMovie = (movie) => {
-        this.service.deleteRating(this.state.sessionId, movie.id).then(() => {
-            this.setState(({ ratedMovieList }) => {
-                const idx = ratedMovieList.findIndex((el) => el.id === movie.id);
-                const newArr = [...ratedMovieList.slice(0, idx), ...ratedMovieList.slice(idx + 1)];
-                return {
-                    ratedMovieList: newArr
-                };
+        this.service
+            .deleteRating(this.state.sessionId, movie.id)
+            .then(() => {
+                this.setState(({ ratedMovieList }) => {
+                    const idx = ratedMovieList.findIndex((el) => el.id === movie.id);
+                    const newArr = [...ratedMovieList.slice(0, idx), ...ratedMovieList.slice(idx + 1)];
+                    return {
+                        ratedMovieList: newArr
+                    };
+                });
+            })
+            .catch(() => {
+                this.setState({
+                    error: true
+                });
             });
-        });
     };
 
     componentDidMount() {

@@ -11,8 +11,6 @@ import { wrapOverview, voteColor } from '../../utils/utils';
 const { Title, Text } = Typography;
 
 export default class CardItem extends React.Component {
-    idx = 0;
-
     changeRating = (value) => {
         this.props.film.rating = value;
         if (value === 0) {
@@ -42,7 +40,7 @@ export default class CardItem extends React.Component {
                                     .filter((el) => genre_ids.indexOf(el.id) >= 0)
                                     .map((genre) => {
                                         return (
-                                            <Tag key={this.idx++} className="card__genre-tag">
+                                            <Tag key={genre.id} className="card__genre-tag">
                                                 {genre.name}
                                             </Tag>
                                         );
